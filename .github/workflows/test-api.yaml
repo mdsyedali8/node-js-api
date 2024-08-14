@@ -8,26 +8,29 @@ jobs:
         services:           #services are containers running in out host machine-nothing to do with steps 
             app:
                 image: alialaa17/simple-node-api
-                ports:
-                    - 3001:3000
+                # ports:
+                #     - 3001:3000
                 env:
                     MONGO_HOSTNAME: mongo
             mongo: 
                 image: mongo
-                ports:
-                    - 27017:27017
+                # ports:
+                #     - 27017:27017
+                            # Docker will expose all ports b/w all container using same n/w
+        # Github action will automatically mk all ur container share the same n/ws, dont hv to expose anything as we did for trying to communicate with our service from host machine and NOT another container
+        # to communicate with service - not using local host, will use service name(app) 
 
         #steps going to run directly on runner machine & can communicate with our service container 
         steps:
             - name: install curl
               run: |
-                apt-get-y update
-                apt-get-y install curl
+                apt-get -y update
+                apt-get -y install curl
             - name: Dump Services context
               run: echo '${{ toJson(job.services) }}'
             - name: post a new user  #communicate from runner to service,use localhost as a host,expose a port
-              run: 'curl -X POST http://localhost:3001/api/users -H ''Content-Type: application/json'' -d ''{"username": "hello","address": "dwded"}'''
+              run: 'curl -X POST http://app:3000/api/users -H ''Content-Type: application/json'' -d ''{"username": "hello","address": "dwded"}'''
             - name: Get Users
-              run: curl http://localhost:3001/api/users
+              run: curl http://app:3000/api/users
 
-                    
+#using app as a host & 3000 port,can access our app, our service & send a req to our API
