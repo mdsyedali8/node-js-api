@@ -25,10 +25,12 @@ jobs:
               uses: docker/build-push-action@v4
               with:
                 context: .
-                file: ./Dockerfile
+                file: /c/Users/md.a.ali/Documents/GIT/nodejs/node-js-api
                 push: true
                 tags: ${{ steps.metadata.outputs.tags }}
                 labels: ${{ steps.metadata.outputs.labels }}
+
+
 
 
 
